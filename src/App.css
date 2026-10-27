@@ -372,16 +372,6 @@ p {
   left: -4%;
   top: 48%;
 }
-.orbit-dot {
-  position: absolute;
-  left: 78%;
-  top: 17%;
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: var(--gold-light);
-  box-shadow: 0 2px 12px #c6ae6950;
-}
 .visual-caption {
   position: absolute;
   right: 0;
@@ -671,7 +661,12 @@ p {
   line-height: 1.9;
 }
 .voices-section {
-  background: #1d201e;
+  --gold: #75603d;
+  --gold-light: #75603d;
+  --muted: #525b4d;
+  --line: #bfc1ad;
+  color: #252a21;
+  background: #e8e2d3;
   border-block: 1px solid var(--line);
 }
 .testimonials {
@@ -688,11 +683,11 @@ p {
 .testimonial blockquote {
   font-size: 21px;
   line-height: 1.5;
-  color: #e0e0d4;
+  color: #30362a;
 }
 .testimonial-featured {
   padding-right: 45px;
-  border-right: 1px solid #454a3c;
+  border-right: 1px solid #bfc1ad;
   justify-content: flex-start;
 }
 .quote-mark {
@@ -719,7 +714,7 @@ p {
 }
 .testimonial-grid .testimonial:nth-child(n + 3) {
   padding-top: 30px;
-  border-top: 1px solid #41463a;
+  border-top: 1px solid #bfc1ad;
 }
 .client {
   display: flex;
@@ -748,13 +743,13 @@ p {
   display: block;
   font-size: 10px;
   line-height: 1.6;
-  color: #b2b8a8;
+  color: #525b4d;
   margin-top: 3px;
 }
 .client-market {
   font-size: 8px;
   letter-spacing: 0.04em;
-  color: #b4b99f;
+  color: #525b4d;
   white-space: nowrap;
 }
 .testimonial-grid .client-market {

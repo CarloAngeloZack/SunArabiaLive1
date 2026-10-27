@@ -1,0 +1,450 @@
+/* Solar motion is the focal sequence; other transitions describe interaction. */
+:root {
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-content h1 {
+  animation: headline-arrival 800ms var(--ease-out) both;
+}
+
+.solar-visual {
+  animation: solar-arrival 1100ms var(--ease-out) both;
+}
+
+.solar-halo {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(ellipse, #b69a4c13, transparent 66%);
+}
+
+.orbit-outer {
+  border-color: #686248;
+}
+
+.orbit-inner {
+  border-color: #b09a67;
+}
+
+.solar-core {
+  background: radial-gradient(circle at 35% 25%, #3a402a, #24291f 75%);
+}
+
+.solar-core small {
+  display: block;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--gold-light);
+}
+
+.solar-indicator {
+  position: absolute;
+  width: 68%;
+  aspect-ratio: 1;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) rotate(var(--phase-angle));
+  transition: transform 700ms var(--ease-out);
+  pointer-events: none;
+}
+
+.solar-indicator span {
+  position: absolute;
+  top: -5px;
+  left: calc(50% - 5px);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--gold-light);
+}
+
+.orbit-label {
+  border: 0;
+  min-height: 44px;
+  padding: 12px 10px;
+  font-size: 9px;
+  text-transform: uppercase;
+  transition:
+    color 180ms,
+    background 180ms;
+}
+
+.orbit-label[aria-pressed="true"] {
+  color: var(--gold-light);
+  background: #2a2e21;
+}
+
+.orbit-label:hover {
+  color: var(--gold-light);
+}
+
+.orbit-label-top {
+  top: 0;
+}
+
+.orbit-label-bottom {
+  bottom: 0;
+}
+
+.orbit-label-left,
+.orbit-label-right {
+  top: calc(50% - 22px);
+}
+
+.motion-toggle {
+  position: absolute;
+  bottom: -30px;
+  left: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 8px 0;
+  border: 0;
+  background: transparent;
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.motion-toggle svg {
+  width: 14px;
+  height: 14px;
+}
+
+.motion-toggle:hover {
+  color: var(--gold-light);
+}
+
+.motion-toggle:disabled {
+  cursor: default;
+  color: var(--muted);
+}
+
+.solar-visual[data-running="false"] .orbit-middle {
+  animation-play-state: paused;
+}
+
+.site-header {
+  transition: box-shadow 250ms;
+}
+
+.site-header[data-scrolled="true"] {
+  box-shadow: 0 12px 32px #080b0826;
+}
+
+.desktop-nav a {
+  position: relative;
+  padding-block: 15px;
+}
+
+.desktop-nav a::after {
+  content: "";
+  position: absolute;
+  bottom: 7px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 250ms var(--ease-out);
+}
+
+.desktop-nav a:hover::after,
+.desktop-nav a[aria-current="location"]::after {
+  transform: scaleX(1);
+}
+
+.desktop-nav a[aria-current="location"] {
+  color: var(--gold-light);
+}
+
+.button {
+  transition:
+    background 200ms,
+    transform 200ms,
+    box-shadow 200ms;
+}
+
+.button svg {
+  transition: transform 250ms var(--ease-out);
+}
+
+.button:hover svg,
+.button:focus-visible svg {
+  transform: translate(3px, -3px);
+}
+
+.button:hover {
+  box-shadow: 0 10px 22px #06090630;
+}
+
+.text-link:hover {
+  gap: 20px;
+}
+
+.text-link svg {
+  transition: transform 220ms var(--ease-out);
+}
+
+.text-link:hover svg {
+  transform: translateX(5px);
+}
+
+.section-heading {
+  position: relative;
+  padding-bottom: 28px;
+}
+
+.section-heading::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--line);
+  transform: scaleX(0.15);
+  transform-origin: left;
+  transition: transform 900ms var(--ease-out);
+}
+
+.section-heading[data-in-view="true"]::after {
+  transform: scaleX(1);
+}
+
+.principle[data-in-view="true"] blockquote em {
+  animation: principle-ink 800ms var(--ease-out);
+}
+
+.phase-tab {
+  position: relative;
+  isolation: isolate;
+}
+
+.phase-tab::before {
+  content: "";
+  position: absolute;
+  inset: 0 -15px;
+  background: #d2b47b0a;
+  z-index: -1;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 350ms var(--ease-out);
+}
+
+.phase-tab.active::before {
+  transform: scaleX(1);
+}
+
+.phase-tab.active > span:first-child {
+  color: var(--gold-light);
+}
+
+.market {
+  transition: border-color 250ms;
+}
+
+.market:hover {
+  border-color: var(--gold-light);
+}
+
+.market h3 {
+  transition: color 250ms;
+}
+
+.market:hover h3 {
+  color: var(--gold-light);
+}
+
+.voices-section .testimonial-featured,
+.voices-section .testimonial-grid .testimonial {
+  border-color: var(--line);
+}
+
+.testimonial-featured[data-in-view="true"] .quote-mark {
+  animation: quote-arrival 650ms var(--ease-out);
+}
+
+.client img {
+  transition: filter 300ms;
+}
+
+.testimonial:hover .client img {
+  filter: saturate(1);
+}
+
+.comparison td {
+  transition: background 180ms;
+}
+
+.comparison tr:hover td {
+  background: #22271f;
+}
+
+.comparison tr:hover td:nth-child(2) {
+  background: #2b3223;
+}
+
+.workshop-offer {
+  position: relative;
+}
+
+.workshop-price {
+  font-size: clamp(72px, 7vw, 96px);
+}
+
+.enquiry-review {
+  animation: panel-arrival 300ms var(--ease-out);
+}
+
+.mobile-nav:not([hidden]) {
+  animation: menu-arrival 220ms var(--ease-out);
+}
+
+@keyframes headline-arrival {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes solar-arrival {
+  from {
+    opacity: 0.5;
+    transform: scale(0.94) rotate(-7deg);
+    filter: blur(3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
+@keyframes principle-ink {
+  from {
+    color: var(--text);
+  }
+  to {
+    color: var(--gold-light);
+  }
+}
+
+@keyframes quote-arrival {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes menu-arrival {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes panel-arrival {
+  from {
+    opacity: 0.7;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 1150px) {
+  .orbit-label {
+    font-size: 8px;
+    letter-spacing: 0.05em;
+  }
+  .orbit-label-left {
+    left: -8%;
+  }
+  .orbit-label-right {
+    right: -8%;
+  }
+}
+
+@media (max-width: 900px) and (min-width: 701px) {
+  .orbit-label {
+    font-size: 7px;
+    padding-inline: 6px;
+  }
+  .solar-core small {
+    font-size: 7px;
+    margin-top: 14px;
+  }
+  .motion-toggle {
+    bottom: -44px;
+  }
+  .visual-caption {
+    bottom: -44px;
+  }
+}
+
+@media (max-width: 700px) {
+  .solar-visual {
+    margin-bottom: 25px;
+  }
+  .orbit-label-left {
+    left: -8%;
+  }
+  .orbit-label-right {
+    right: -8%;
+  }
+  .orbit-label-top {
+    top: -8px;
+  }
+  .orbit-label-bottom {
+    bottom: -8px;
+  }
+  .motion-toggle {
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -42px;
+    white-space: nowrap;
+  }
+  .solar-core small {
+    font-size: 8px;
+    margin-top: 14px;
+  }
+  .section-heading {
+    padding-bottom: 24px;
+  }
+  .button:hover {
+    transform: none;
+  }
+}
+
+/* Pausing clears finite entrances so text can never be left concealed. */
+.landing-page[data-motion="paused"] *,
+.landing-page[data-motion="paused"] *::before,
+.landing-page[data-motion="paused"] *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .button:hover,
+  .button:hover svg,
+  .text-link:hover svg {
+    transform: none;
+  }
+}

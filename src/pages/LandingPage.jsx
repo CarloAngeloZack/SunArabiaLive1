@@ -172,6 +172,12 @@ function Portrait({ client }) {
 export default function LandingPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activePhase, setActivePhase] = useState(0);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(
+    () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
+  const [motionPaused, setMotionPaused] = useState(false);
+  const motionDisabled = motionPaused || prefersReducedMotion;
+  const pageRef = useRef(null);
   const [formState, setFormState] = useState({
     name: "",
     email: "",
@@ -182,6 +188,82 @@ export default function LandingPage() {
   const menuButton = useRef(null);
   const firstMenuLink = useRef(null);
   const reviewHeading = useRef(null);
+  useEffect(() => {
+    const page = pageRef.current;
+    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const onPreference = (event) => setPrefersReducedMotion(event.matches);
+    preference.addEventListener("change", onPreference);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(({ target, isIntersecting }) => {
+          if (isIntersecting) target.dataset.inView = "true";
+          if (target.classList.contains("solar-visual")) {
+            target.dataset.running = String(isIntersecting && !document.hidden);
+          }
+        });
+      },
+      { threshold: 0.15 },
+    );
+    page
+      .querySelectorAll(
+        ".section-heading, .principle, .testimonial-featured, .solar-visual",
+      )
+      .forEach((element) => observer.observe(element));
+
+    const onVisibility = () => {
+      const visual = page.querySelector(".solar-visual");
+      const bounds = visual.getBoundingClientRect();
+      visual.dataset.running = String(
+        !document.hidden &&
+          bounds.bottom > 0 &&
+          bounds.top < window.innerHeight,
+      );
+    };
+    const onScroll = () => {
+      page.querySelector(".site-header").dataset.scrolled = String(
+        window.scrollY > 24,
+      );
+    };
+    const navigationObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(({ target, isIntersecting }) => {
+          if (!isIntersecting) return;
+          page.querySelectorAll(".desktop-nav a").forEach((link) => {
+            if (link.hash === `#${target.id}`)
+              link.setAttribute("aria-current", "location");
+            else link.removeAttribute("aria-current");
+          });
+        });
+      },
+      { rootMargin: "-15% 0px -65% 0px", threshold: 0 },
+    );
+    page
+      .querySelectorAll("main section[id]")
+      .forEach((section) => navigationObserver.observe(section));
+    document.addEventListener("visibilitychange", onVisibility);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => {
+      observer.disconnect();
+      navigationObserver.disconnect();
+      preference.removeEventListener("change", onPreference);
+      document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
+  useEffect(() => {
+    if (motionDisabled) return;
+    const panel = document.getElementById(`phase-panel-${activePhase}`);
+    const animation = panel.animate(
+      [
+        { opacity: 0.65, transform: "translateX(12px)", filter: "blur(2px)" },
+        { opacity: 1, transform: "translateX(0)", filter: "blur(0)" },
+      ],
+      { duration: 320, easing: "cubic-bezier(0.16, 1, 0.3, 1)" },
+    );
+    return () => animation.cancel();
+  }, [activePhase, motionDisabled]);
   useEffect(() => {
     if (!menuOpen) return;
     firstMenuLink.current?.focus();
@@ -211,7 +293,11 @@ export default function LandingPage() {
     }
   };
   return (
-    <>
+    <div
+      className="landing-page"
+      ref={pageRef}
+      data-motion={motionDisabled ? "paused" : "playing"}
+    >
       <a className="skip-link" href="#main">
         Skip to content
       </a>
@@ -290,31 +376,60 @@ export default function LandingPage() {
           </div>
           <div
             className="solar-visual"
-            aria-label="The Solar Cycle: Diagnostic, Architecture, Deployment, Optimization"
-            role="img"
+            aria-label="Explore the Solar Cycle phases"
+            role="group"
+            style={{ "--phase-angle": `${activePhase * 90}deg` }}
           >
+            <div className="solar-halo" aria-hidden="true" />
             <div className="orbit orbit-outer" />
             <div className="orbit orbit-middle" />
             <div className="orbit orbit-inner" />
+            <div className="solar-indicator" aria-hidden="true">
+              <span />
+            </div>
             <div className="solar-core">
               <span>
                 SUN
                 <br />
                 <em>ARABIA</em>
               </span>
-              <small>STRATEGY INTO GROWTH</small>
+              <small aria-live="polite">{phases[activePhase].title}</small>
             </div>
-            <span className="orbit-label orbit-label-top">01 / DIAGNOSTIC</span>
-            <span className="orbit-label orbit-label-right">
-              02 / ARCHITECTURE
-            </span>
-            <span className="orbit-label orbit-label-bottom">
-              03 / DEPLOYMENT
-            </span>
-            <span className="orbit-label orbit-label-left">
-              04 / OPTIMIZATION
-            </span>
-            <span className="orbit-dot" />
+            {phases.map((phase, index) => (
+              <button
+                key={phase.title}
+                className={`orbit-label orbit-label-${["top", "right", "bottom", "left"][index]}`}
+                aria-pressed={activePhase === index}
+                onClick={() => setActivePhase(index)}
+              >
+                0{index + 1} / {phase.title}
+              </button>
+            ))}
+            <button
+              className="motion-toggle"
+              aria-pressed={motionDisabled}
+              disabled={prefersReducedMotion}
+              onClick={() => setMotionPaused(!motionPaused)}
+            >
+              <svg
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.3"
+                aria-hidden="true"
+              >
+                {motionDisabled ? (
+                  <path d="m6 3 6 5-6 5Z" />
+                ) : (
+                  <path d="M5 3v10m6-10v10" />
+                )}
+              </svg>
+              {prefersReducedMotion
+                ? "Reduced motion"
+                : motionPaused
+                  ? "Play motion"
+                  : "Pause motion"}
+            </button>
             <span className="visual-caption">
               A continuous cycle.
               <br />A compounding advantage.
@@ -680,7 +795,9 @@ export default function LandingPage() {
                   className="button"
                   onClick={() => {
                     setReviewing(false);
-                    requestAnimationFrame(() => document.getElementById('name')?.focus());
+                    requestAnimationFrame(() =>
+                      document.getElementById("name")?.focus(),
+                    );
                   }}
                 >
                   Edit your details <Arrow />
@@ -764,6 +881,6 @@ export default function LandingPage() {
           <span>Strategy. Sovereignty. Growth.</span>
         </div>
       </footer>
-    </>
+    </div>
   );
 }

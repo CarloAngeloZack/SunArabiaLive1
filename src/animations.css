@@ -1,4 +1,4 @@
-/* Solar motion is the focal sequence; other transitions describe interaction. */
+﻿/* Solar motion is the focal sequence; other transitions describe interaction. */
 :root {
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -65,7 +65,7 @@
   border: 0;
   min-height: 44px;
   padding: 12px 10px;
-  font-size: 9px;
+  font-size: 11px;
   text-transform: uppercase;
   transition:
     color 180ms,
@@ -95,9 +95,7 @@
 }
 
 .motion-toggle {
-  position: absolute;
-  bottom: -30px;
-  left: 0;
+  position: static;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -105,7 +103,7 @@
   padding: 8px 0;
   border: 0;
   background: transparent;
-  font-size: 10px;
+  font-size: 12px;
   color: var(--muted);
 }
 
@@ -317,7 +315,7 @@
 @keyframes solar-arrival {
   from {
     opacity: 0.5;
-    transform: scale(0.94) rotate(-7deg);
+    transform: scale(0.94);
     filter: blur(3px);
   }
   to {
@@ -363,70 +361,6 @@
   }
 }
 
-@media (max-width: 1150px) {
-  .orbit-label {
-    font-size: 8px;
-    letter-spacing: 0.05em;
-  }
-  .orbit-label-left {
-    left: -8%;
-  }
-  .orbit-label-right {
-    right: -8%;
-  }
-}
-
-@media (max-width: 900px) and (min-width: 701px) {
-  .orbit-label {
-    font-size: 7px;
-    padding-inline: 6px;
-  }
-  .solar-core small {
-    font-size: 7px;
-    margin-top: 14px;
-  }
-  .motion-toggle {
-    bottom: -44px;
-  }
-  .visual-caption {
-    bottom: -44px;
-  }
-}
-
-@media (max-width: 700px) {
-  .solar-visual {
-    margin-bottom: 25px;
-  }
-  .orbit-label-left {
-    left: -8%;
-  }
-  .orbit-label-right {
-    right: -8%;
-  }
-  .orbit-label-top {
-    top: -8px;
-  }
-  .orbit-label-bottom {
-    bottom: -8px;
-  }
-  .motion-toggle {
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: -42px;
-    white-space: nowrap;
-  }
-  .solar-core small {
-    font-size: 8px;
-    margin-top: 14px;
-  }
-  .section-heading {
-    padding-bottom: 24px;
-  }
-  .button:hover {
-    transform: none;
-  }
-}
-
 /* Pausing clears finite entrances so text can never be left concealed. */
 .landing-page[data-motion="paused"] *,
 .landing-page[data-motion="paused"] *::before,
@@ -446,5 +380,101 @@
   .button:hover svg,
   .text-link:hover svg {
     transform: none;
+  }
+}
+
+.market-bridge[data-in-view="true"] .bridge-connection {
+  stroke-dasharray: 1000;
+  animation: bridge-connect 1400ms var(--ease-out) both;
+}
+@keyframes bridge-connect {
+  from {
+    stroke-dashoffset: 1000;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (max-width: 1200px) {
+  .orbit-label {
+    font-size: 10px;
+    letter-spacing: 0.02em;
+    padding-inline: 8px;
+  }
+  .orbit-label-left {
+    left: -5%;
+  }
+  .orbit-label-right {
+    right: -5%;
+  }
+}
+
+@media (max-width: 720px) {
+  .solar-visual {
+    width: 100%;
+    max-width: 390px;
+  }
+  .solar-art {
+    width: min(100%, 300px);
+    margin-inline: auto;
+  }
+  .solar-core > span {
+    font-size: 38px;
+  }
+  .solar-core small {
+    font-size: 9px;
+    margin-top: 14px;
+  }
+  .orbit-controls {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    aspect-ratio: auto;
+    margin-top: 16px;
+  }
+  .orbit-controls .orbit-label {
+    position: static;
+    transform: none;
+    min-height: 48px;
+    padding: 10px;
+    border: 1px solid #535a41;
+    border-radius: 2px;
+    font-size: 12px;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  .orbit-controls .orbit-label[aria-pressed="true"] {
+    background: var(--gold);
+    color: var(--ink);
+    border-color: var(--gold);
+  }
+  .solar-footer {
+    justify-content: center;
+    padding-top: 4px;
+  }
+  .visual-caption {
+    display: none;
+  }
+  .section-heading {
+    padding-bottom: 24px;
+  }
+}
+
+@media (max-width: 360px) {
+  .solar-art {
+    width: 260px;
+    max-width: 100%;
+  }
+  .solar-core > span {
+    font-size: 32px;
+  }
+  .solar-core small {
+    font-size: 8px;
+  }
+  .orbit-controls .orbit-label {
+    font-size: 11px;
+    padding-inline: 7px;
   }
 }

@@ -169,6 +169,44 @@ function Portrait({ client }) {
     </div>
   );
 }
+
+function MarketBridge() {
+  return (
+    <div
+      className="market-bridge"
+      role="img"
+      aria-label="Sun Arabia connects the USA and UK with the UAE and MENA markets"
+    >
+      <svg viewBox="0 0 1000 220" fill="none" aria-hidden="true">
+        <path
+          className="bridge-track"
+          d="M130 90C300 90 330 170 500 170S700 90 870 90"
+        />
+        <path
+          className="bridge-track bridge-track-secondary"
+          d="M130 90C300 90 330 30 500 30S700 90 870 90"
+        />
+        <path
+          className="bridge-connection"
+          d="M130 90C300 90 330 170 500 170S700 90 870 90"
+        />
+        <circle cx="130" cy="90" r="6" />
+        <circle cx="870" cy="90" r="6" />
+        <path d="m487 162 13 8-13 8m26-156-13 8 13 8" />
+      </svg>
+      <span className="bridge-label bridge-west">USA / UK</span>
+      <span className="bridge-brand">
+        <SunMark />
+        <span>Sun Arabia</span>
+      </span>
+      <span className="bridge-label bridge-east">UAE / MENA</span>
+      <span className="bridge-caption">
+        A global perspective. A unified voice.
+      </span>
+    </div>
+  );
+}
+
 export default function LandingPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activePhase, setActivePhase] = useState(0);
@@ -193,6 +231,11 @@ export default function LandingPage() {
     const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
     const onPreference = (event) => setPrefersReducedMotion(event.matches);
     preference.addEventListener("change", onPreference);
+    const desktop = window.matchMedia("(min-width: 981px)");
+    const onDesktop = (event) => {
+      if (event.matches) setMenuOpen(false);
+    };
+    desktop.addEventListener("change", onDesktop);
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -207,7 +250,7 @@ export default function LandingPage() {
     );
     page
       .querySelectorAll(
-        ".section-heading, .principle, .testimonial-featured, .solar-visual",
+        ".section-heading, .principle, .testimonial-featured, .solar-visual, .market-bridge",
       )
       .forEach((element) => observer.observe(element));
 
@@ -248,6 +291,7 @@ export default function LandingPage() {
       observer.disconnect();
       navigationObserver.disconnect();
       preference.removeEventListener("change", onPreference);
+      desktop.removeEventListener("change", onDesktop);
       document.removeEventListener("visibilitychange", onVisibility);
       window.removeEventListener("scroll", onScroll);
     };
@@ -380,60 +424,66 @@ export default function LandingPage() {
             role="group"
             style={{ "--phase-angle": `${activePhase * 90}deg` }}
           >
-            <div className="solar-halo" aria-hidden="true" />
-            <div className="orbit orbit-outer" />
-            <div className="orbit orbit-middle" />
-            <div className="orbit orbit-inner" />
-            <div className="solar-indicator" aria-hidden="true">
-              <span />
+            <div className="solar-art">
+              <div className="solar-halo" aria-hidden="true" />
+              <div className="orbit orbit-outer" />
+              <div className="orbit orbit-middle" />
+              <div className="orbit orbit-inner" />
+              <div className="solar-indicator" aria-hidden="true">
+                <span />
+              </div>
+              <div className="solar-core">
+                <span>
+                  SUN
+                  <br />
+                  <em>ARABIA</em>
+                </span>
+                <small aria-live="polite">{phases[activePhase].title}</small>
+              </div>
             </div>
-            <div className="solar-core">
-              <span>
-                SUN
-                <br />
-                <em>ARABIA</em>
-              </span>
-              <small aria-live="polite">{phases[activePhase].title}</small>
+            <div className="orbit-controls">
+              {phases.map((phase, index) => (
+                <button
+                  key={phase.title}
+                  className={`orbit-label orbit-label-${["top", "right", "bottom", "left"][index]}`}
+                  aria-pressed={activePhase === index}
+                  onClick={() => setActivePhase(index)}
+                >
+                  0{index + 1} / {phase.title}
+                </button>
+              ))}
             </div>
-            {phases.map((phase, index) => (
+            <div className="solar-footer">
               <button
-                key={phase.title}
-                className={`orbit-label orbit-label-${["top", "right", "bottom", "left"][index]}`}
-                aria-pressed={activePhase === index}
-                onClick={() => setActivePhase(index)}
+                className="motion-toggle"
+                aria-pressed={motionDisabled}
+                disabled={prefersReducedMotion}
+                onClick={() => setMotionPaused(!motionPaused)}
               >
-                0{index + 1} / {phase.title}
+                <svg
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.3"
+                  aria-hidden="true"
+                >
+                  {motionDisabled ? (
+                    <path d="m6 3 6 5-6 5Z" />
+                  ) : (
+                    <path d="M5 3v10m6-10v10" />
+                  )}
+                </svg>
+                {prefersReducedMotion
+                  ? "Reduced motion"
+                  : motionPaused
+                    ? "Play motion"
+                    : "Pause motion"}
               </button>
-            ))}
-            <button
-              className="motion-toggle"
-              aria-pressed={motionDisabled}
-              disabled={prefersReducedMotion}
-              onClick={() => setMotionPaused(!motionPaused)}
-            >
-              <svg
-                viewBox="0 0 16 16"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.3"
-                aria-hidden="true"
-              >
-                {motionDisabled ? (
-                  <path d="m6 3 6 5-6 5Z" />
-                ) : (
-                  <path d="M5 3v10m6-10v10" />
-                )}
-              </svg>
-              {prefersReducedMotion
-                ? "Reduced motion"
-                : motionPaused
-                  ? "Play motion"
-                  : "Pause motion"}
-            </button>
-            <span className="visual-caption">
-              A continuous cycle.
-              <br />A compounding advantage.
-            </span>
+              <span className="visual-caption">
+                A continuous cycle.
+                <br />A compounding advantage.
+              </span>
+            </div>
           </div>
           <div className="hero-bottom">
             <span className="established">
@@ -475,8 +525,7 @@ export default function LandingPage() {
             </h2>
             <p>
               Institutional-grade strategy.
-              <br />
-              High-end brand sovereignty.
+              <br /> High-end brand sovereignty.
             </p>
           </div>
           <div className="about-grid">
@@ -540,8 +589,7 @@ export default function LandingPage() {
               </h2>
               <p>
                 A four-phase proprietary framework engineered
-                <br />
-                for compounding revenue growth.
+                <br /> for compounding revenue growth.
               </p>
             </div>
             <div className="process-layout">
@@ -607,10 +655,10 @@ export default function LandingPage() {
             </h2>
             <p>
               A global perspective.
-              <br />
-              Precisely local execution.
+              <br /> Precisely local execution.
             </p>
           </div>
+          <MarketBridge />
           <div className="markets-grid">
             {markets.map((market) => (
               <article className="market" key={market.region}>
@@ -631,8 +679,7 @@ export default function LandingPage() {
               </h2>
               <p>
                 Trusted by visionary leaders across three of
-                <br />
-                the world’s most competitive markets.
+                <br /> the world’s most competitive markets.
               </p>
             </div>
             <div className="testimonials">
@@ -661,8 +708,7 @@ export default function LandingPage() {
             </h2>
             <p>
               Our focus is your growth.
-              <br />
-              Our model reflects it.
+              <br /> Our model reflects it.
             </p>
           </div>
           <table className="comparison">
@@ -718,7 +764,10 @@ export default function LandingPage() {
               </p>
             </div>
             <div className="workshop-offer">
-              <h3>The Clarity Workshop</h3>
+              <div className="workshop-offer-heading">
+                <SunMark />
+                <h3>The Clarity Workshop</h3>
+              </div>
               <div className="workshop-price">
                 $5,000<span>Paid strategy & audit</span>
               </div>
@@ -864,6 +913,12 @@ export default function LandingPage() {
         </section>
       </main>
       <footer className="site-footer container">
+        <div className="footer-wordmark" aria-hidden="true">
+          SUN <em>ARABIA</em>
+          <span>
+            <SunMark />
+          </span>
+        </div>
         <div className="footer-top">
           <Brand />
           <nav aria-label="Footer navigation">

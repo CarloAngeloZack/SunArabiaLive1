@@ -1,5 +1,6 @@
 # dependencies
 node_modules/
+.design-preview/
 
 # production build
 dist/
